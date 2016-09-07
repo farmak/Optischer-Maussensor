@@ -275,9 +275,12 @@ void dumpDelta2() {
   if (dy2 > 128) {
     dy2 = dy2 - 256;
   }
+ 
+  xi2 += dx2;
+  yi2 += dy2;
   
-  x2 += dx2*0.046355; //für 500cpi - 0.046mm pro Count, für 1000cpi - 0.02247mm pro Count (auf kariertem Blockpapier)
-  y2 += dy2*0.046355;
+  x2 += xi2 *0.046355; //für 500cpi - 0.046mm pro Count, für 1000cpi - 0.02247mm pro Count (auf kariertem Blockpapier)
+  y2 += yi2 *0.046355;
   
   
 
@@ -287,7 +290,9 @@ void dumpDelta2() {
 
   }
 
-  
+ float a2 = atan(dy2/dx2);
+ float s2 = y2*sin(a2); 
+ float phi2 = (s2/d)*360; 
   
 }  
 
@@ -296,49 +301,47 @@ void dumpDelta2() {
 ///////////////////////
 
 void loop() {
-    dumpDelta1();
-    dumpDelta2();
-    //dumpFrame();
-
+  dumpDelta1();
+  dumpDelta2();
+      
+  
+  
   Serial.print("Motion1: ");
   Serial.print(motion1 && 1);
-  
+  Serial.print("  ");
   Serial.print("SQUAL1: ");
   Serial.print(squal1, DEC);
   Serial.print("      ");
-
+  Serial.print("Motion2: ");
+  Serial.print(motion2 && 1);
+  Serial.print("  ");
+  Serial.print("SQUAL2: ");
+  Serial.println(squal2, DEC);
+  /*
   Serial.print(" DELTA X1: ");
   Serial.print(dx1, DEC);
   Serial.print("      ");
   Serial.print("   DELTA Y1: ");
-  Serial.println(dy1, DEC);  
+  Serial.println(dy1, DEC);
+  */  
   Serial.print("Gesamt X1: ");
-  Serial.print(x1, DEC); Serial.print("mm");
+  Serial.print(x1); Serial.print("mm");
   Serial.print("      ");
+  Serial.print("Gesamt X2: ");
+  Serial.print(x2); Serial.println("mm");
   Serial.print("Gesamt Y1: ");
-  Serial.print(y1, DEC); Serial.println("mm");
-  Serial.println(" ");
-
-  Serial.print("  SQUAL2: ");
-  Serial.print(squal2, DEC);
+  Serial.print(y1); Serial.print("mm");
   Serial.print("      ");
-  Serial.print("  Motion2: ");
-  Serial.println(motion2 && 1);
+  Serial.print("Gesamt Y2: ");
+  Serial.print(y2); Serial.println("mm");
+  Serial.println(" ");
+  /*
   Serial.print(" DELTA X2: ");
   Serial.print(dx2, DEC);
   Serial.print("      ");
   Serial.print("   DELTA Y2: ");
-  Serial.println(dy2, DEC);  
-  Serial.print("Gesamt X2: ");
-  Serial.print(x2, DEC); Serial.print("mm");
-  Serial.print("      ");
-  Serial.print("Gesamt Y2: ");
-  Serial.print(y2, DEC); Serial.println("mm");
-  Serial.println(" ");
+  Serial.println(dy2, DEC);
+  */  
     
     //delay(1000);
 }
-
-
-
-
