@@ -73,9 +73,7 @@ void pushByte1(byte data1){
     delayMicroseconds(100);
     digitalWrite (SCLK1, HIGH);
     
-    //Serial.print((data & i) != 0 ? HIGH : LOW, BIN);
   }
-  //Serial.println("");
 }
 
 void pushByte2(byte data2){
@@ -89,9 +87,7 @@ void pushByte2(byte data2){
     delayMicroseconds(100);
     digitalWrite (SCLK2, HIGH);
     
-    //Serial.print((data & i) != 0 ? HIGH : LOW, BIN);
   }
-  //Serial.println("");
 }
 
 byte readRegister1(byte address1) {
@@ -240,7 +236,7 @@ void dumpDelta1() {
     dy1 = dy1 - 256;
   }
 
-  xi1 += dx1; //Ganze Zahlen addieren, statt Gleitkommazahlen -> weniger Genauigkeitsverluste durch Rundung
+  xi1 += dx1; //Ganze Zahlen addieren, statt Gleitkommazahlen, später erst multiplizieren -> weniger Genauigkeitsverluste durch Rundung
   yi1 += dy1;
   
   x1 = xi1 *0.046355; //für 500cpi - 0.046mm pro Count, für 1000cpi - 0.02247mm pro Count (auf kariertem Blockpapier)
