@@ -73,7 +73,9 @@ void pushByte1(byte data1){
     delayMicroseconds(100);
     digitalWrite (SCLK1, HIGH);
     
+    //Serial.print((data & i) != 0 ? HIGH : LOW, BIN);
   }
+  //Serial.println("");
 }
 
 void pushByte2(byte data2){
@@ -87,7 +89,9 @@ void pushByte2(byte data2){
     delayMicroseconds(100);
     digitalWrite (SCLK2, HIGH);
     
+    //Serial.print((data & i) != 0 ? HIGH : LOW, BIN);
   }
+  //Serial.println("");
 }
 
 byte readRegister1(byte address1) {
@@ -171,6 +175,23 @@ void reset() {
 }
 
 
+byte squal1; 
+  char motion1; 
+  int dx1;
+  int dy1; 
+  byte shutter_up1;
+  byte shutter_low1;
+  byte pixelsum1; 
+  
+byte squal2;
+  char motion2;
+  int dx2 ;
+  int dy2;
+  byte shutter_up2;
+  byte shutter_low2;
+  byte pixelsum2;
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //SETUP
 /////////////////////
@@ -236,7 +257,7 @@ void dumpDelta1() {
     dy1 = dy1 - 256;
   }
 
-  xi1 += dx1; //Ganze Zahlen addieren, statt Gleitkommazahlen, später erst multiplizieren -> weniger Genauigkeitsverluste durch Rundung
+  xi1 += dx1; //Ganze Zahlen addieren, statt Gleitkommazahlen -> weniger Genauigkeitsverluste durch Rundung
   yi1 += dy1;
   
   x1 = xi1 *0.046355; //für 500cpi - 0.046mm pro Count, für 1000cpi - 0.02247mm pro Count (auf kariertem Blockpapier)
@@ -252,6 +273,13 @@ void dumpDelta1() {
   float a1 = atan(dy1/dx1);
   float s1 = y1*sin(a1); 
   float phi1 = (s1/d)*360;
+
+  Serial.print("Motion1: ");
+  Serial.print(motion1 && 1);
+  Serial.print("  ");
+  Serial.print("SQUAL1: ");
+  Serial.print(squal1, DEC);
+  Serial.print("      ");
   
   
 }
@@ -275,8 +303,8 @@ void dumpDelta2() {
   xi2 += dx2;
   yi2 += dy2;
   
-  x2 += xi2 *0.046355; //für 500cpi - 0.046mm pro Count, für 1000cpi - 0.02247mm pro Count (auf kariertem Blockpapier)
-  y2 += yi2 *0.046355;
+  x2 = xi2 *0.046355; //für 500cpi - 0.046mm pro Count, für 1000cpi - 0.02247mm pro Count (auf kariertem Blockpapier)
+  y2 = yi2 *0.046355;
   
   
 
@@ -289,7 +317,12 @@ void dumpDelta2() {
  float a2 = atan(dy2/dx2);
  float s2 = y2*sin(a2); 
  float phi2 = (s2/d)*360; 
-  
+
+  Serial.print("Motion2: ");
+  Serial.print(motion2 && 1);
+  Serial.print("  ");
+  Serial.print("SQUAL2: ");
+  Serial.println(squal2, DEC);
 }  
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -300,19 +333,14 @@ void loop() {
   dumpDelta1();
   dumpDelta2();
       
+ if (phi1 > phi2) {
+  phi = phi1;
+ }
+ else {
+  phi = phi2;
+ }
   
   
-  Serial.print("Motion1: ");
-  Serial.print(motion1 && 1);
-  Serial.print("  ");
-  Serial.print("SQUAL1: ");
-  Serial.print(squal1, DEC);
-  Serial.print("      ");
-  Serial.print("Motion2: ");
-  Serial.print(motion2 && 1);
-  Serial.print("  ");
-  Serial.print("SQUAL2: ");
-  Serial.println(squal2, DEC);
   /*
   Serial.print(" DELTA X1: ");
   Serial.print(dx1, DEC);
@@ -330,7 +358,10 @@ void loop() {
   Serial.print("      ");
   Serial.print("Gesamt Y2: ");
   Serial.print(y2); Serial.println("mm");
+  Serial.print("Winkel: ");
+  Serial.print(phi); Serial.println("°");
   Serial.println(" ");
+  
   /*
   Serial.print(" DELTA X2: ");
   Serial.print(dx2, DEC);
@@ -341,3 +372,6 @@ void loop() {
     
     //delay(1000);
 }
+
+
+
